@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>清迈 3 天旅行路线</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+      background: #f5f0eb;
+      color: #333;
+    }
+
+    /* ── Header ── */
+    .header {
+      background: linear-gradient(135deg, #2d6a4f 0%, #40916c 50%, #52b788 100%);
+      color: white;
+      padding: 32px 24px 24px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 200px; height: 200px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 50%;
+    }
+    .header h1 { font-size: 28px; font-weight: 700; letter-spacing: 2px; }
+    .header p { margin-top: 6px; font-size: 14px; opacity: 0.85; }
+    .header .tags { margin-top: 12px; display: flex; justify-content: center; gap: 8px; flex-wrap: wrap; }
+    .tag {
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.35);
+      border-radius: 20px;
+      padding: 3px 12px;
+      font-size: 12px;
+    }
+
+    /* ── Tab Nav ── */
+    .tab-nav {
+      display: flex;
+      background: #fff;
+      border-bottom: 2px solid #e8e0d8;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .tab-btn {
+      flex: 1;
+      padding: 14px 0;
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+    .tab-btn.active { color: #2d6a4f; }
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 20%; right: 20%;
+      height: 3px;
+      background: #2d6a4f;
+      border-radius: 2px;
+    }
+    .tab-btn:hover { color: #40916c; }
+
+    /* ── Tab Content ── */
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── Map View ── */
+    .map-container {
+      padding: 16px;
+    }
+    .map-wrap {
+      background: #d4e8d0;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+      height: 480px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+    }
+    .map-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    /* ── Legend ── */
+    .legend {
+      display: flex;
+      gap: 16px;
+      margin-top: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      color: #555;
+    }
+    .legend-dot {
+      width: 12px; height: 12px;
+      border-radius: 50%;
+    }
+
+    /* ── Day Cards ── */
+    .day-section {
+      padding: 16px;
+    }
+    .day-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .day-badge {
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+      color: white;
+      flex-shrink: 0;
+    }
+    .day-badge.d1 { background: #e76f51; }
+    .day-badge.d2 { background: #2a9d8f; }
+    .day-badge.d3 { background: #e9c46a; color: #333; }
+
+    .day-title { font-size: 18px; font-weight: 700; }
+    .day-subtitle { font-size: 12px; color: #888; margin-top: 2px; }
+
+    .timeline {
+      position: relative;
+      padding-left: 28px;
+    }
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 9px; top: 0; bottom: 0;
+      width: 2px;
+      background: linear-gradient(to bottom, #e8e0d8 0%, #e8e0d8 100%);
+    }
+
+    .stop-card {
+      background: white;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+      position: relative;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .stop-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    }
+    .stop-card::before {
+      content: '';
+      position: absolute;
+      left: -24px;
+      top: 18px;
+      width: 12px; height: 12px;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 0 0 2px #ccc;
+    }
+    .stop-card.d1::before { background: #e76f51; box-shadow: 0 0 0 2px #e76f51; }
+    .stop-card.d2::before { background: #2a9d8f; box-shadow: 0 0 0 2px #2a9d8f; }
+    .stop-card.d3::before { background: #e9c46a; box-shadow: 0 0 0 2px #e9c46a; }
+
+    .stop-time {
+      font-size: 11px;
+      color: #aaa;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .stop-name {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+    .stop-name-en {
+      font-size: 11px;
+      color: #aaa;
+      margin-bottom: 6px;
+    }
+    .stop-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.5;
+    }
+    .stop-tags {
+      display: flex;
+      gap: 6px;
+      margin-top: 8px;
+      flex-wrap: wrap;
+    }
+    .stop-tag {
+      font-size: 11px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #f0f0f0;
+      color: #666;
+    }
+    .stop-tag.highlight {
+      background: #fff3e0;
+      color: #e76f51;
+    }
+    .stop-tag.nature { background: #e8f5e9; color: #2d6a4f; }
+    .stop-tag.culture { background: #e8eaf6; color: #3949ab; }
+    .stop-tag.food { background: #fce4ec; color: #c62828; }
+    .stop-tag.activity { background: #fff8e1; color: #f57f17; }
+    .stop-tag.spa { background: #f3e5f5; color: #7b1fa2; }
+
+    .tip-box {
+      background: #fff9f0;
+      border-left: 3px solid #e9c46a;
+      border-radius: 0 8px 8px 0;
+      padding: 10px 14px;
+      margin: 12px 0;
+      font-size: 12px;
+      color: #666;
+      line-height: 1.6;
+    }
+    .tip-box strong { color: #e76f51; }
+
+    /* ── Overview Tab ── */
+    .overview-grid {
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .overview-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .overview-card.full { grid-column: 1 / -1; }
+    .ov-icon { font-size: 24px; margin-bottom: 8px; }
+    .ov-title { font-size: 13px; font-weight: 700; color: #333; margin-bottom: 6px; }
+    .ov-content { font-size: 12px; color: #666; line-height: 1.7; }
+    .ov-content li { margin-left: 14px; margin-bottom: 2px; }
+
+    .day-flow {
+      display: flex;
+      gap: 0;
+      margin: 16px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+    .day-flow-item {
+      flex: 1;
+      padding: 16px 12px;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
+    .day-flow-item.d1 { background: #e76f51; }
+    .day-flow-item.d2 { background: #2a9d8f; }
+    .day-flow-item.d3 { background: #e9c46a; color: #333; }
+    .day-flow-item::after {
+      content: '▶';
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      z-index: 1;
+      color: white;
+    }
+    .day-flow-item:last-child::after { display: none; }
+    .day-flow-label { font-size: 11px; opacity: 0.85; }
+    .day-flow-title { font-size: 13px; font-weight: 700; margin-top: 4px; }
+    .day-flow-stops { font-size: 11px; margin-top: 4px; opacity: 0.8; }
+
+    /* ── Tips Tab ── */
+    .tips-section { padding: 16px; }
+    .tips-card {
+      background: white;
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .tips-card-title {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tips-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 8px 0;
+      border-bottom: 1px solid #f5f5f5;
+      font-size: 13px;
+    }
+    .tips-row:last-child { border-bottom: none; }
+    .tips-label {
+      font-weight: 600;
+      color: #2d6a4f;
+      min-width: 64px;
+      font-size: 12px;
+    }
+    .tips-val { color: #555; line-height: 1.5; flex: 1; }
+
+    /* ── Popup ── */
+    .popup-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 200;
+      align-items: flex-end;
+      justify-content: center;
+    }
+    .popup-overlay.show { display: flex; }
+    .popup {
+      background: white;
+      border-radius: 20px 20px 0 0;
+      padding: 24px;
+      width: 100%;
+      max-width: 480px;
+      max-height: 70vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+    .popup-handle {
+      width: 40px; height: 4px;
+      background: #ddd;
+      border-radius: 2px;
+      margin: 0 auto 16px;
+    }
+    .popup-title { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .popup-sub { font-size: 12px; color: #aaa; margin-bottom: 12px; }
+    .popup-body { font-size: 14px; color: #555; line-height: 1.7; }
+    .popup-close {
+      position: absolute;
+      top: 16px; right: 20px;
+      background: #f0f0f0;
+      border: none;
+      border-radius: 50%;
+      width: 28px; height: 28px;
+      font-size: 16px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .popup { position: relative; }
+  </style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="header">
+  <h1>🌿 清迈 3 天旅行路线</h1>
+  <p>Chiang Mai · Thailand · 精华版行程</p>
+  <div class="tags">
+    <span class="tag">🐘 大象体验</span>
+    <span class="tag">🛕 寺庙文化</span>
+    <span class="tag">🌊 水中古树</span>
+    <span class="tag">🌲 自然探索</span>
+    <span class="tag">💆 温泉SPA</span>
+  </div>
+</div>
+
+<!-- Tab Nav -->
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="switchTab('overview')">📋 总览</button>
+  <button class="tab-btn" onclick="switchTab('map')">🗺️ 地图</button>
+  <button class="tab-btn" onclick="switchTab('day1')">Day 1</button>
+  <button class="tab-btn" onclick="switchTab('day2')">Day 2</button>
+  <button class="tab-btn" onclick="switchTab('day3')">Day 3</button>
+  <button class="tab-btn" onclick="switchTab('tips')">💡 贴士</button>
+</div>
+
+<!-- ==================== OVERVIEW ==================== -->
+<div id="tab-overview" class="tab-content active">
+  <div class="day-flow">
+    <div class="day-flow-item d1">
+      <div class="day-flow-label">Day 1</div>
+      <div class="day-flow-title">古城文化</div>
+      <div class="day-flow-stops">6 个景点</div>
+    </div>
+    <div class="day-flow-item d2">
+      <div class="day-flow-label">Day 2</div>
+      <div class="day-flow-title">北部探险</div>
+      <div class="day-flow-stops">5 个景点</div>
+    </div>
+    <div class="day-flow-item d3">
+      <div class="day-flow-label">Day 3</div>
+      <div class="day-flow-title">水树&北部</div>
+      <div class="day-flow-stops">4 个景点</div>
+    </div>
+  </div>
+
+  <div class="overview-grid">
+    <div class="overview-card full">
+      <div class="ov-icon">📍</div>
+      <div class="ov-title">行程亮点</div>
+      <div class="ov-content">
+        <ul>
+          <li><strong>Day 1</strong> — 乌蒙寺 · 兰纳博物馆 · 网红咖啡 · 公园 · SPA · 精彩市集</li>
+          <li><strong>Day 2</strong> — 大象之家 · 老虎王国 · 丛林滑车 · 清迈蓝庙</li>
+          <li><strong>Day 3</strong> — 🌟水中百年雨树 · 蓝庙 · 布亚唐粘性瀑布</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="overview-card">
+      <div class="ov-icon">🚗</div>
+      <div class="ov-title">交通建议</div>
+      <div class="ov-content">
+        <ul>
+          <li>Day 1：步行 + Grab</li>
+          <li>Day 2-3：<strong>包车</strong>（必备）</li>
+          <li>包车约 ¥300-500/天</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="overview-card">
+      <div class="ov-icon">💰</div>
+      <div class="ov-title">预算参考</div>
+      <div class="ov-content">
+        <ul>
+          <li>大象营 ~¥400/人</li>
+          <li>老虎王国 ~¥150/人</li>
+          <li>SPA ~¥300起</li>
+          <li>水树船费 ~¥25/人</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="overview-card full">
+      <div class="ov-icon">⭐</div>
+      <div class="ov-title">本次新增：水中百年雨树</div>
+      <div class="ov-content">
+        位于 Sri Lanna 国家公园 Mae Ngat 水库中央，1984年建坝时被淹没的村庄遗留古树，百年树龄矗立水中，<strong>清晨晨雾弥漫时如梦似幻</strong>，是近年清迈最火的 Unseen Thailand 打卡地。建议 06:00 出发赶晨雾。
+      </div>
+    </div>
+
+    <div class="overview-card full">
+      <div class="ov-icon">⚠️</div>
+      <div class="ov-title">重要提醒</div>
+      <div class="ov-content">
+        <ul>
+          <li>🐘 大象营需<strong>提前1-2天</strong>网上预约</li>
+          <li>🌊 水中雨树旱季水位低时树可能露出水面，出发前电话确认</li>
+          <li>🛕 寺庙参观需<strong>遮肩盖膝</strong>，备薄外套</li>
+          <li>🌡️ 4月清迈日间炎热（35°C+），建议早出早归</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MAP ==================== -->
+<div id="tab-map" class="tab-content">
+  <div class="map-container">
+    <div class="map-wrap">
+      <svg class="map-svg" viewBox="0 0 400 480" xmlns="http://www.w3.org/2000/svg">
+        <!-- 背景 -->
+        <rect width="400" height="480" fill="#c8dfc4"/>
+
+        <!-- 山脉装饰（西部） -->
+        <ellipse cx="60" cy="200" rx="80" ry="60" fill="#a8c9a0" opacity="0.6"/>
+        <ellipse cx="30" cy="280" rx="60" ry="50" fill="#9bbf93" opacity="0.5"/>
+        <ellipse cx="80" cy="350" rx="70" ry="55" fill="#a8c9a0" opacity="0.5"/>
+
+        <!-- 水库（北部，Mae Ngat） -->
+        <ellipse cx="220" cy="80" rx="45" ry="25" fill="#7ec8e3" opacity="0.8"/>
+        <text x="220" y="84" text-anchor="middle" font-size="8" fill="#2980b9" font-weight="600">Mae Ngat 水库</text>
+
+        <!-- 河流 -->
+        <path d="M 180 100 Q 200 200 190 300 Q 185 360 200 420" stroke="#7ec8e3" stroke-width="4" fill="none" opacity="0.7"/>
+
+        <!-- 城市区域（市区） -->
+        <rect x="155" y="250" width="90" height="80" rx="8" fill="#e8d5b7" opacity="0.7"/>
+        <text x="200" y="295" text-anchor="middle" font-size="10" fill="#8b6914" font-weight="700">清迈古城</text>
+        <text x="200" y="307" text-anchor="middle" font-size="8" fill="#8b6914">Chiang Mai</text>
+
+        <!-- 道路 -->
+        <line x1="200" y1="100" x2="200" y2="480" stroke="#f5f0e8" stroke-width="3" opacity="0.6"/>
+        <line x1="100" y1="290" x2="340" y2="290" stroke="#f5f0e8" stroke-width="3" opacity="0.6"/>
+        <line x1="160" y1="180" x2="280" y2="180" stroke="#f5f0e8" stroke-width="2" opacity="0.5"/>
+
+        <!-- ===== Day 3 景点（北部）===== -->
+        <!-- 水中雨树 -->
+        <g onclick="showPopup('water-tree')" style="cursor:pointer">
+          <circle cx="220" cy="78" r="14" fill="#e9c46a" stroke="white" stroke-width="2.5"/>
+          <text x="220" y="82" text-anchor="middle" font-size="11" fill="white" font-weight="700">🌳</text>
+          <text x="245" y="72" font-size="9" fill="#c77d0a" font-weight="700">水中雨树</text>
+          <text x="245" y="82" font-size="8" fill="#888">Day3 ①</text>
+        </g>
+
+        <!-- 清迈蓝庙 -->
+        <g onclick="showPopup('blue-temple')" style="cursor:pointer">
+          <circle cx="235" cy="145" r="13" fill="#e9c46a" stroke="white" stroke-width="2.5"/>
+          <text x="235" y="149" text-anchor="middle" font-size="11" fill="white" font-weight="700">🔵</text>
+          <text x="252" y="140" font-size="9" fill="#c77d0a" font-weight="700">清迈蓝庙</text>
+          <text x="252" y="150" font-size="8" fill="#888">Day3 ②</text>
+        </g>
+
+        <!-- Sri Lanna 国家公园 -->
+        <g onclick="showPopup('sri-lanna')" style="cursor:pointer">
+          <circle cx="270" cy="110" r="11" fill="#e9c46a" stroke="white" stroke-width="2"/>
+          <text x="270" y="114" text-anchor="middle" font-size="9" fill="white" font-weight="700">🏞️</text>
+        </g>
+
+        <!-- 布亚唐瀑布 -->
+        <g onclick="showPopup('buatong')" style="cursor:pointer">
+          <circle cx="300" cy="160" r="13" fill="#e9c46a" stroke="white" stroke-width="2.5"/>
+          <text x="300" y="164" text-anchor="middle" font-size="11" fill="white" font-weight="700">💦</text>
+          <text x="316" y="155" font-size="9" fill="#c77d0a" font-weight="700">布亚唐瀑布</text>
+          <text x="316" y="165" font-size="8" fill="#888">Day3 ③</text>
+        </g>
+
+        <!-- ===== Day 2 景点（北部偏中）===== -->
+        <!-- 大象之家 -->
+        <g onclick="showPopup('elephant')" style="cursor:pointer">
+          <circle cx="185" cy="178" r="14" fill="#2a9d8f" stroke="white" stroke-width="2.5"/>
+          <text x="185" y="182" text-anchor="middle" font-size="11" fill="white" font-weight="700">🐘</text>
+          <text x="130" y="172" font-size="9" fill="#1a7a6e" font-weight="700">大象之家</text>
+          <text x="130" y="182" font-size="8" fill="#888">Day2 ①</text>
+        </g>
+
+        <!-- 老虎王国 -->
+        <g onclick="showPopup('tiger')" style="cursor:pointer">
+          <circle cx="215" cy="210" r="13" fill="#2a9d8f" stroke="white" stroke-width="2.5"/>
+          <text x="215" y="214" text-anchor="middle" font-size="11" fill="white" font-weight="700">🐯</text>
+          <text x="232" y="205" font-size="9" fill="#1a7a6e" font-weight="700">老虎王国</text>
+          <text x="232" y="215" font-size="8" fill="#888">Day2 ②</text>
+        </g>
+
+        <!-- 丛林滑车 -->
+        <g onclick="showPopup('zipline')" style="cursor:pointer">
+          <circle cx="165" cy="215" r="12" fill="#2a9d8f" stroke="white" stroke-width="2"/>
+          <text x="165" y="219" text-anchor="middle" font-size="10" fill="white" font-weight="700">🎢</text>
+          <text x="115" y="210" font-size="9" fill="#1a7a6e" font-weight="700">丛林滑车</text>
+          <text x="115" y="220" font-size="8" fill="#888">Day2 ③</text>
+        </g>
+
+        <!-- ===== Day 1 景点（市区）===== -->
+        <!-- 乌蒙寺 -->
+        <g onclick="showPopup('suan-dok')" style="cursor:pointer">
+          <circle cx="170" cy="270" r="13" fill="#e76f51" stroke="white" stroke-width="2.5"/>
+          <text x="170" y="274" text-anchor="middle" font-size="11" fill="white" font-weight="700">🏛️</text>
+          <text x="115" y="265" font-size="9" fill="#c44a2a" font-weight="700">乌蒙寺</text>
+          <text x="115" y="275" font-size="8" fill="#888">Day1 ①</text>
+        </g>
+
+        <!-- 兰纳博物馆 -->
+        <g onclick="showPopup('lanna')" style="cursor:pointer">
+          <circle cx="195" cy="285" r="12" fill="#e76f51" stroke="white" stroke-width="2"/>
+          <text x="195" y="289" text-anchor="middle" font-size="10" fill="white" font-weight="700">🏠</text>
+        </g>
+
+        <!-- Attika Café -->
+        <g onclick="showPopup('attika')" style="cursor:pointer">
+          <circle cx="230" cy="275" r="12" fill="#e76f51" stroke="white" stroke-width="2"/>
+          <text x="230" y="279" text-anchor="middle" font-size="10" fill="white" font-weight="700">☕</text>
+          <text x="245" y="270" font-size="9" fill="#c44a2a" font-weight="700">Attika Café</text>
+          <text x="245" y="280" font-size="8" fill="#888">Day1 ③</text>
+        </g>
+
+        <!-- 布阿克哈德公园 -->
+        <g onclick="showPopup('buak-had')" style="cursor:pointer">
+          <circle cx="180" cy="308" r="11" fill="#e76f51" stroke="white" stroke-width="2"/>
+          <text x="180" y="312" text-anchor="middle" font-size="9" fill="white" font-weight="700">🌳</text>
+        </g>
+
+        <!-- Rarinjinda SPA -->
+        <g onclick="showPopup('spa')" style="cursor:pointer">
+          <circle cx="240" cy="300" r="12" fill="#e76f51" stroke="white" stroke-width="2"/>
+          <text x="240" y="304" text-anchor="middle" font-size="10" fill="white" font-weight="700">💆</text>
+          <text x="255" y="296" font-size="9" fill="#c44a2a" font-weight="700">Rarinjinda SPA</text>
+          <text x="255" y="306" font-size="8" fill="#888">Day1 ⑤</text>
+        </g>
+
+        <!-- 精彩市集 -->
+        <g onclick="showPopup('jing-jai')" style="cursor:pointer">
+          <circle cx="215" cy="320" r="12" fill="#e76f51" stroke="white" stroke-width="2"/>
+          <text x="215" y="324" text-anchor="middle" font-size="10" fill="white" font-weight="700">🛒</text>
+          <text x="230" y="316" font-size="9" fill="#c44a2a" font-weight="700">精彩市集</text>
+          <text x="230" y="326" font-size="8" fill="#888">Day1 ⑥</text>
+        </g>
+
+        <!-- 南部景点 -->
+        <!-- On The Rock -->
+        <g onclick="showPopup('on-the-rock')" style="cursor:pointer">
+          <circle cx="175" cy="380" r="12" fill="#888" stroke="white" stroke-width="2"/>
+          <text x="175" y="384" text-anchor="middle" font-size="10" fill="white" font-weight="700">🪨</text>
+          <text x="120" y="376" font-size="9" fill="#555" font-weight="700">On The Rock</text>
+          <text x="120" y="386" font-size="8" fill="#aaa">备选</text>
+        </g>
+
+        <!-- 骑马公园 -->
+        <g onclick="showPopup('horse')" style="cursor:pointer">
+          <circle cx="155" cy="355" r="11" fill="#888" stroke="white" stroke-width="2"/>
+          <text x="155" y="359" text-anchor="middle" font-size="9" fill="white" font-weight="700">🐴</text>
+        </g>
+
+        <!-- 方向标注 -->
+        <text x="200" y="25" text-anchor="middle" font-size="10" fill="#555" opacity="0.7">↑ 北部（Mae Taeng）</text>
+        <text x="200" y="465" text-anchor="middle" font-size="10" fill="#555" opacity="0.7">↓ 南部（Hang Dong）</text>
+
+        <!-- 比例尺 -->
+        <line x1="320" y1="450" x2="370" y2="450" stroke="#888" stroke-width="1.5"/>
+        <line x1="320" y1="447" x2="320" y2="453" stroke="#888" stroke-width="1.5"/>
+        <line x1="370" y1="447" x2="370" y2="453" stroke="#888" stroke-width="1.5"/>
+        <text x="345" y="462" text-anchor="middle" font-size="8" fill="#888">~20km</text>
+      </svg>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#e76f51"></div>
+        <span>Day 1 古城文化</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#2a9d8f"></div>
+        <span>Day 2 北部探险</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#e9c46a"></div>
+        <span>Day 3 水树&北部</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background:#888"></div>
+        <span>备选景点</span>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:11px;color:#aaa;margin-top:8px;">👆 点击地图上的图标查看详情</p>
+  </div>
+</div>
+
+<!-- ==================== DAY 1 ==================== -->
+<div id="tab-day1" class="tab-content">
+  <div class="day-section">
+    <div class="day-header">
+      <div class="day-badge d1">Day<br>1</div>
+      <div>
+        <div class="day-title">古城文化漫游</div>
+        <div class="day-subtitle">🏙️ 区域：清迈古城内及周边 · 步行/Grab 可达</div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="stop-card d1" onclick="showPopup('suan-dok')">
+        <div class="stop-time">09:00</div>
+        <div class="stop-name">🏛️ 乌蒙寺</div>
+        <div class="stop-name-en">Wat Suan Dok</div>
+        <div class="stop-desc">清迈最具代表性的寺庙之一，白色佛塔群在清晨阳光下格外庄严，人少清净。</div>
+        <div class="stop-tags">
+          <span class="stop-tag culture">文化</span>
+          <span class="stop-tag highlight">必去</span>
+        </div>
+      </div>
+
+      <div class="stop-card d1" onclick="showPopup('lanna')">
+        <div class="stop-time">10:30</div>
+        <div class="stop-name">🏠 兰纳传统民居博物馆</div>
+        <div class="stop-name-en">Lanna Traditional House Museum</div>
+        <div class="stop-desc">北泰传统木屋建筑群，了解清迈兰纳王国历史文化，距乌蒙寺步行可达。</div>
+        <div class="stop-tags">
+          <span class="stop-tag culture">历史</span>
+        </div>
+      </div>
+
+      <div class="stop-card d1" onclick="showPopup('attika')">
+        <div class="stop-time">12:00</div>
+        <div class="stop-name">☕ Attika Studio Café & Workshop</div>
+        <div class="stop-name-en">塔佩路网红咖啡</div>
+        <div class="stop-desc">清迈文艺网红咖啡工作室，可在此享用午餐，感受清迈慢生活氛围。</div>
+        <div class="stop-tags">
+          <span class="stop-tag food">美食</span>
+          <span class="stop-tag highlight">网红</span>
+        </div>
+      </div>
+
+      <div class="stop-card d1" onclick="showPopup('buak-had')">
+        <div class="stop-time">14:00</div>
+        <div class="stop-name">🌳 布阿克哈德公园</div>
+        <div class="stop-name-en">Buak Had Public Park</div>
+        <div class="stop-desc">古城西南角的城市花园，鲜花盛开，适合饭后散步休息。</div>
+        <div class="stop-tags">
+          <span class="stop-tag nature">自然</span>
+        </div>
+      </div>
+
+      <div class="stop-card d1" onclick="showPopup('spa')">
+        <div class="stop-time">16:00</div>
+        <div class="stop-name">💆 Rarinjinda Wellness Spa & Resort</div>
+        <div class="stop-name-en">顶级温泉SPA度假村</div>
+        <div class="stop-desc">清迈顶级温泉SPA，提前预约，消除旅途疲劳，为后两天充足体力。</div>
+        <div class="stop-tags">
+          <span class="stop-tag spa">SPA</span>
+          <span class="stop-tag highlight">推荐</span>
+        </div>
+      </div>
+
+      <div class="stop-card d1" onclick="showPopup('jing-jai')">
+        <div class="stop-time">19:00</div>
+        <div class="stop-name">🛒 精彩市集</div>
+        <div class="stop-name-en">Jing Jai Market</div>
+        <div class="stop-desc">清迈最受欢迎的本地市集，有机食品、文创小物、地道小吃，周末更热闹。</div>
+        <div class="stop-tags">
+          <span class="stop-tag food">美食</span>
+          <span class="stop-tag activity">购物</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DAY 2 ==================== -->
+<div id="tab-day2" class="tab-content">
+  <div class="day-section">
+    <div class="day-header">
+      <div class="day-badge d2">Day<br>2</div>
+      <div>
+        <div class="day-title">北部丛林探险</div>
+        <div class="day-subtitle">🌲 区域：Mae Rim / Mae Taeng · 需包车</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>📌 出发提醒：</strong>大象营建议 <strong>08:00 前出发</strong>，需提前 1-2 天网上预约，带换洗衣物（会弄湿弄脏）。
+    </div>
+
+    <div class="timeline">
+      <div class="stop-card d2" onclick="showPopup('elephant')">
+        <div class="stop-time">08:00</div>
+        <div class="stop-name">🐘 New Elephant Home</div>
+        <div class="stop-name-en">新象之家 · Mae Taeng</div>
+        <div class="stop-desc">道德象营，可为大象洗澡、喂食、与大象一起在泥浆中玩耍，约半天行程。是清迈最正宗的大象互动体验之一。</div>
+        <div class="stop-tags">
+          <span class="stop-tag nature">动物</span>
+          <span class="stop-tag highlight">必体验</span>
+          <span class="stop-tag activity">需预约</span>
+        </div>
+      </div>
+
+      <div class="stop-card d2">
+        <div class="stop-time">12:30</div>
+        <div class="stop-name">🍜 Mae Rim 区域午餐</div>
+        <div class="stop-name-en">当地泰式餐厅</div>
+        <div class="stop-desc">在 Mae Rim 区域找一家本地泰餐补充体力，推荐尝试清迈特色的 Khao Soi（咖喱面）。</div>
+        <div class="stop-tags">
+          <span class="stop-tag food">美食</span>
+        </div>
+      </div>
+
+      <div class="stop-card d2" onclick="showPopup('tiger')">
+        <div class="stop-time">14:00</div>
+        <div class="stop-name">🐯 Tiger Kingdom</div>
+        <div class="stop-name-en">老虎王国 · Mae Rim</div>
+        <div class="stop-desc">与各种体型的老虎近距离合影，按老虎大小分档收费，幼虎最受欢迎。</div>
+        <div class="stop-tags">
+          <span class="stop-tag nature">动物</span>
+          <span class="stop-tag highlight">网红</span>
+        </div>
+      </div>
+
+      <div class="stop-card d2" onclick="showPopup('zipline')">
+        <div class="stop-time">15:30</div>
+        <div class="stop-name">🎢 Pong Yang Jungle Coaster & Zipline</div>
+        <div class="stop-name-en">丛林滑车 + 高空飞索</div>
+        <div class="stop-desc">在热带雨林中乘坐滑车穿越山间，高空飞索俯瞰丛林全景，刺激感十足！</div>
+        <div class="stop-tags">
+          <span class="stop-tag activity">户外</span>
+          <span class="stop-tag activity">刺激</span>
+        </div>
+      </div>
+
+      <div class="stop-card d2" onclick="showPopup('blue-temple')">
+        <div class="stop-time">17:30</div>
+        <div class="stop-name">🔵 清迈蓝庙</div>
+        <div class="stop-name-en">Blue Temple · Mae Taeng</div>
+        <div class="stop-desc">全身蓝色玻璃马赛克装饰的现代寺庙，傍晚 4-6 点光线最美，是清迈最具视觉冲击力的网红寺庙。</div>
+        <div class="stop-tags">
+          <span class="stop-tag culture">文化</span>
+          <span class="stop-tag highlight">网红打卡</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== DAY 3 ==================== -->
+<div id="tab-day3" class="tab-content">
+  <div class="day-section">
+    <div class="day-header">
+      <div class="day-badge d3">Day<br>3</div>
+      <div>
+        <div class="day-title">水中雨树 · 北部深度游</div>
+        <div class="day-subtitle">🌊 Sri Lanna 国家公园 · 需包车 · 早起必须</div>
+      </div>
+    </div>
+
+    <div class="tip-box">
+      <strong>⏰ 超级重要：</strong>水中雨树晨雾最美，必须 <strong>06:00 前出发</strong>，到码头约 07:30，赶 08:00 前的晨雾时段！出发前请电话确认当前水位（旱季水位低时树可能不在水中）。
+    </div>
+
+    <div class="timeline">
+      <div class="stop-card d3" onclick="showPopup('water-tree')">
+        <div class="stop-time">06:00 出发</div>
+        <div class="stop-name">🌳 水中百年雨树</div>
+        <div class="stop-name-en">Chamchaa Tree in Mae Ngat Reservoir · Sri Lanna National Park</div>
+        <div class="stop-desc">
+          清迈最神秘的自然奇观！1984年建坝蓄水时被淹没的村庄遗留下来的百年雨树，孤独矗立在 Mae Ngat 水库中央。乘船约 30-40 分钟抵达，清晨薄雾笼罩下如梦如幻，是近年清迈最火的 Unseen Thailand 打卡地。
+        </div>
+        <div class="stop-tags">
+          <span class="stop-tag nature">自然奇观</span>
+          <span class="stop-tag highlight">🌟 本次新增</span>
+          <span class="stop-tag highlight">Unseen Thailand</span>
+        </div>
+      </div>
+
+      <div class="stop-card d3">
+        <div class="stop-time">09:30</div>
+        <div class="stop-name">🚗 返回码头，前往蓝庙</div>
+        <div class="stop-name-en">驱车约 30 分钟</div>
+        <div class="stop-desc">从水库码头出发，沿途欣赏北部山区风光，前往 Mae Taeng 区的清迈蓝庙。</div>
+        <div class="stop-tags">
+          <span class="stop-tag">途中</span>
+        </div>
+      </div>
+
+      <div class="stop-card d3" onclick="showPopup('blue-temple')">
+        <div class="stop-time">11:00</div>
+        <div class="stop-name">🔵 清迈蓝庙</div>
+        <div class="stop-name-en">Blue Temple（若 Day2 未去）</div>
+        <div class="stop-desc">若 Day2 已游览可跳过，或再次欣赏上午光线下的蓝庙。附近有本地餐厅可解决午餐。</div>
+        <div class="stop-tags">
+          <span class="stop-tag culture">文化</span>
+        </div>
+      </div>
+
+      <div class="stop-card d3">
+        <div class="stop-time">12:30</div>
+        <div class="stop-name">🍜 Mae Taeng 区午餐</div>
+        <div class="stop-name-en">当地泰式餐厅</div>
+        <div class="stop-desc">在蓝庙附近享用午餐，补充体力。</div>
+        <div class="stop-tags">
+          <span class="stop-tag food">美食</span>
+        </div>
+      </div>
+
+      <div class="stop-card d3" onclick="showPopup('buatong')">
+        <div class="stop-time">14:00</div>
+        <div class="stop-name">💦 布亚唐粘性瀑布</div>
+        <div class="stop-name-en">Buatong Waterfall · Chet Si Fountain National Park</div>
+        <div class="stop-desc">
+          神奇的石灰华瀑布，因富含碳酸钙而形成粗糙的岩石表面，游客可以<strong>赤脚直接踩着走上去</strong>，完全不会滑倒！是清迈独一无二的体验。
+        </div>
+        <div class="stop-tags">
+          <span class="stop-tag nature">自然</span>
+          <span class="stop-tag highlight">独特体验</span>
+        </div>
+      </div>
+
+      <div class="stop-card d3">
+        <div class="stop-time">16:30</div>
+        <div class="stop-name">🏠 返回清迈市区</div>
+        <div class="stop-name-en">约 1.5 小时车程</div>
+        <div class="stop-desc">返回市区，自由活动：古城夜市、按摩放松、购买手信，完美收尾清迈之旅。</div>
+        <div class="stop-tags">
+          <span class="stop-tag">自由活动</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== TIPS ==================== -->
+<div id="tab-tips" class="tab-content">
+  <div class="tips-section">
+
+    <div class="tips-card">
+      <div class="tips-card-title">🌳 水中雨树 · 详细攻略</div>
+      <div class="tips-row">
+        <span class="tips-label">📍 位置</span>
+        <span class="tips-val">Sri Lanna 国家公园，Mae Ngat Somboon Chon 水库，Phrao 区方向</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">🚤 交通</span>
+        <span class="tips-val">需乘船进入水库，单程约 30-40 分钟</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">💰 费用</span>
+        <span class="tips-val">公园门票 30 泰铢/人 + 包船约 700 泰铢（限3人）</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">⏰ 最佳时间</span>
+        <span class="tips-val"><strong>清晨 6:00-8:00</strong>，晨雾最美；傍晚 5:30 前也可</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">📅 最佳季节</span>
+        <span class="tips-val">10月-3月（丰水期，树被淹没在水中，最美）</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">⚠️ 注意</span>
+        <span class="tips-val">旱季水位低时树可能不在水中，<strong>出发前打电话确认</strong></span>
+      </div>
+    </div>
+
+    <div class="tips-card">
+      <div class="tips-card-title">🚗 交通贴士</div>
+      <div class="tips-row">
+        <span class="tips-label">Day 1</span>
+        <span class="tips-val">古城内步行为主，短途用 Grab（类似滴滴），起步价约 30-50 泰铢</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">Day 2-3</span>
+        <span class="tips-val"><strong>强烈建议包车</strong>，景点分散，包车约 800-1500 泰铢/天（约 ¥160-300）</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">租摩托</span>
+        <span class="tips-val">约 150-250 泰铢/天，适合有驾驶经验的旅行者</span>
+      </div>
+    </div>
+
+    <div class="tips-card">
+      <div class="tips-card-title">💰 预算参考（人均）</div>
+      <div class="tips-row">
+        <span class="tips-label">🐘 大象营</span>
+        <span class="tips-val">约 1500-2500 泰铢（¥300-500）</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">🐯 老虎王国</span>
+        <span class="tips-val">约 400-1000 泰铢（¥80-200），按老虎大小定价</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">🎢 丛林滑车</span>
+        <span class="tips-val">约 500-800 泰铢（¥100-160）</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">💆 SPA</span>
+        <span class="tips-val">约 1500 泰铢起（¥300+），Rarinjinda 属高端</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">🌳 水中雨树</span>
+        <span class="tips-val">门票 30 泰铢 + 船费约 700 泰铢/船（3人均摊约 ¥50/人）</span>
+      </div>
+    </div>
+
+    <div class="tips-card">
+      <div class="tips-card-title">👗 着装 & 注意事项</div>
+      <div class="tips-row">
+        <span class="tips-label">🛕 寺庙</span>
+        <span class="tips-val">需遮肩盖膝，备一件薄外套或纱巾，门口通常有免费借用</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">🐘 象营</span>
+        <span class="tips-val">穿旧衣旧鞋，会弄湿弄脏；带换洗衣物</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">🌡️ 天气</span>
+        <span class="tips-val">4月清迈日间 35°C+，建议早出早归，防晒必备</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">💧 饮水</span>
+        <span class="tips-val">随身携带矿泉水，户外活动补水很重要</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">📱 网络</span>
+        <span class="tips-val">建议购买泰国本地 SIM 卡（True Move / AIS），机场即可购买</span>
+      </div>
+    </div>
+
+    <div class="tips-card">
+      <div class="tips-card-title">📞 需提前预约</div>
+      <div class="tips-row">
+        <span class="tips-label">🐘 大象营</span>
+        <span class="tips-val">提前 1-2 天，官网或 Klook/GetYourGuide 预约</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">💆 SPA</span>
+        <span class="tips-val">提前 1 天，电话或官网预约时段</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">🌳 水中雨树</span>
+        <span class="tips-val">出发前电话确认水位，到码头直接租船即可</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ==================== POPUP ==================== -->
+<div class="popup-overlay" id="popupOverlay" onclick="closePopup(event)">
+  <div class="popup" id="popupContent">
+    <div class="popup-handle"></div>
+    <button class="popup-close" onclick="closePopup()">✕</button>
+    <div class="popup-title" id="popupTitle"></div>
+    <div class="popup-sub" id="popupSub"></div>
+    <div class="popup-body" id="popupBody"></div>
+  </div>
+</div>
+
+<script>
+  // Tab switching
+  function switchTab(name) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  // Popup data
+  const popups = {
+    'water-tree': {
+      title: '🌳 水中百年雨树',
+      sub: 'Chamchaa Tree · Mae Ngat Reservoir · Sri Lanna NP · Day 3 ①',
+      body: `<p>清迈最神秘的自然奇观，也是本次行程的最大亮点！</p>
+      <br>
+      <p>1984年泰国政府在此建坝蓄水，淹没了整个村庄（Ban Mae Tong），唯有这棵百年雨树（Chamchaa / Rain Tree）孤独地矗立在水库中央，至今已成为 Unseen Thailand 的代表景观。</p>
+      <br>
+      <p><strong>🌅 最佳体验：</strong>清晨 6-8 点，薄雾笼罩水面，古树在雾中若隐若现，宛如仙境。</p>
+      <br>
+      <p><strong>🚤 游览方式：</strong>从码头乘船出发，单程约 30-40 分钟，可在树旁停留拍照。</p>
+      <br>
+      <p><strong>💰 费用：</strong>公园门票 30 泰铢 + 包船约 700 泰铢（可 3 人共享）</p>
+      <br>
+      <p><strong>⚠️ 注意：</strong>旱季（4-5月）水位低，树根可能露出水面，出发前务必电话确认水位状态。</p>`
+    },
+    'blue-temple': {
+      title: '🔵 清迈蓝庙',
+      sub: 'Wat Rong Suea Ten · Mae Taeng District · Day 2/3',
+      body: `<p>全身覆盖蓝色玻璃马赛克的现代寺庙，是清迈近年最火的网红打卡地之一。</p>
+      <br>
+      <p>与清迈著名的"白庙"（Wat Rong Khun）齐名，由同一位艺术家的学生设计，蓝色象征纯洁与佛陀的智慧。</p>
+      <br>
+      <p><strong>⏰ 最佳时间：</strong>下午 4-6 点，夕阳光线下蓝色马赛克闪闪发光，最适合拍照。</p>
+      <br>
+      <p><strong>📍 位置：</strong>Mae Taeng 区，距清迈市区约 40-50 分钟车程，与大象营、布亚唐瀑布同方向，可串联游览。</p>`
+    },
+    'buatong': {
+      title: '💦 布亚唐粘性瀑布',
+      sub: 'Buatong Waterfall · Chet Si Fountain NP · Day 3 ③',
+      body: `<p>泰国最神奇的瀑布之一！由于水中富含碳酸钙，长期沉积形成粗糙的石灰华岩石表面，摩擦力极大。</p>
+      <br>
+      <p><strong>✨ 独特体验：</strong>游客可以<strong>赤脚直接踩着瀑布走上去</strong>，完全不会滑倒，非常适合全家老少参与。</p>
+      <br>
+      <p><strong>📍 位置：</strong>Mae Taeng 区，距清迈市区约 70km，与蓝庙同方向可顺路游览。</p>
+      <br>
+      <p><strong>💡 建议：</strong>穿凉鞋或防水鞋，带换洗衣物，水流较急时注意安全。</p>`
+    },
+    'elephant': {
+      title: '🐘 New Elephant Home',
+      sub: '新象之家 · Mae Taeng · Day 2 ①',
+      body: `<p>清迈最受好评的道德象营之一，不骑象，强调与大象自然互动。</p>
+      <br>
+      <p><strong>🎯 体验内容：</strong>为大象洗澡、喂食香蕉甘蔗、在泥浆中与大象一起玩耍，约半天行程。</p>
+      <br>
+      <p><strong>📅 预约：</strong>务必提前 1-2 天通过官网或 Klook 预约，名额有限。</p>
+      <br>
+      <p><strong>👗 着装：</strong>穿旧衣旧鞋，会弄湿弄脏，带换洗衣物。</p>
+      <br>
+      <p><strong>💰 费用：</strong>约 1500-2500 泰铢/人（¥300-500）</p>`
+    },
+    'tiger': {
+      title: '🐯 Tiger Kingdom',
+      sub: '老虎王国 · Mae Rim · Day 2 ②',
+      body: `<p>与真实的老虎近距离接触、合影，按老虎体型大小分为多个区域。</p>
+      <br>
+      <p><strong>🐯 选择建议：</strong>幼虎（Baby）最温顺受欢迎，成年虎更有震撼感，可按喜好选择。</p>
+      <br>
+      <p><strong>💰 费用：</strong>约 400-1000 泰铢，按老虎大小分别定价，可选一个或多个区域。</p>
+      <br>
+      <p><strong>📸 拍照：</strong>有专业摄影师随行拍摄，也可自带相机。</p>`
+    },
+    'zipline': {
+      title: '🎢 Pong Yang Jungle Coaster & Zipline',
+      sub: '丛林滑车 + 高空飞索 · Mae Rim · Day 2 ③',
+      body: `<p>在热带雨林中体验刺激的户外活动，是清迈最受欢迎的户外娱乐项目之一。</p>
+      <br>
+      <p><strong>🎢 丛林滑车：</strong>沿山间轨道高速滑行，穿越丛林，速度可自控。</p>
+      <br>
+      <p><strong>🪂 高空飞索：</strong>从高处飞越树冠，俯瞰清迈北部山区全景。</p>
+      <br>
+      <p><strong>💰 费用：</strong>约 500-800 泰铢，含多条线路。</p>`
+    },
+    'suan-dok': {
+      title: '🏛️ 乌蒙寺',
+      sub: 'Wat Suan Dok · Mueang Chiang Mai · Day 1 ①',
+      body: `<p>清迈最重要的寺庙之一，建于 14 世纪兰纳王国时期，供奉着清迈历代王室的骨灰。</p>
+      <br>
+      <p><strong>🏛️ 建筑特色：</strong>以巨大的白色佛塔群著称，中央大佛塔金光闪闪，四周环绕着小白塔。</p>
+      <br>
+      <p><strong>⏰ 建议时间：</strong>清晨 9 点前，人少光线好，最适合拍照。</p>
+      <br>
+      <p><strong>👗 着装：</strong>需遮肩盖膝，门口有免费纱巾可借用。</p>
+      <br>
+      <p><strong>💰 门票：</strong>免费（外国人进入某些区域可能需要小额费用）</p>`
+    },
+    'lanna': {
+      title: '🏠 兰纳传统民居博物馆',
+      sub: 'Lanna Traditional House Museum · Day 1 ②',
+      body: `<p>展示清迈兰纳王国时期传统木屋建筑的户外博物馆，多栋百年木屋原址保留。</p>
+      <br>
+      <p><strong>🏠 特色：</strong>了解北泰传统建筑风格、生活方式和民俗文化，适合文化爱好者。</p>
+      <br>
+      <p><strong>📍 位置：</strong>距乌蒙寺步行约 10 分钟，可顺路游览。</p>`
+    },
+    'attika': {
+      title: '☕ Attika Studio Café & Workshop',
+      sub: 'Tha Phae Road · Day 1 ③',
+      body: `<p>清迈塔佩路的文艺网红咖啡工作室，融合咖啡、设计、手工艺于一体。</p>
+      <br>
+      <p><strong>☕ 推荐：</strong>手冲咖啡、特色甜品，环境文艺，适合拍照打卡。</p>
+      <br>
+      <p><strong>🛍️ 特色：</strong>店内有手工艺品展售，可带走一件清迈文创纪念品。</p>`
+    },
+    'buak-had': {
+      title: '🌳 布阿克哈德公园',
+      sub: 'Buak Had Public Park · Day 1 ④',
+      body: `<p>位于清迈古城西南角的城市公园，是本地居民日常休闲的好去处。</p>
+      <br>
+      <p><strong>🌸 特色：</strong>园内鲜花盛开，绿树成荫，有喷泉和小湖，午后散步十分惬意。</p>
+      <br>
+      <p><strong>💡 建议：</strong>午餐后在此散步消食，约 30-45 分钟即可游览完毕。</p>`
+    },
+    'spa': {
+      title: '💆 Rarinjinda Wellness Spa & Resort',
+      sub: 'Tambon Chang Moi · Day 1 ⑤',
+      body: `<p>清迈顶级温泉 SPA 度假村，以天然温泉和专业理疗著称。</p>
+      <br>
+      <p><strong>💆 服务：</strong>泰式按摩、温泉浴、芳香疗法、身体护理等多种项目。</p>
+      <br>
+      <p><strong>⏰ 建议：</strong>下午 4 点后前往，避开高峰期，提前 1 天预约。</p>
+      <br>
+      <p><strong>💰 费用：</strong>约 1500 泰铢起（¥300+），高端项目更贵。</p>`
+    },
+    'jing-jai': {
+      title: '🛒 精彩市集',
+      sub: 'Jing Jai Market · Pa Tan · Day 1 ⑥',
+      body: `<p>清迈最受欢迎的本地市集，以有机食品和文创手工艺品为主。</p>
+      <br>
+      <p><strong>🛒 特色：</strong>有机蔬果、本地小吃、手工艺品、二手书、文创设计品，应有尽有。</p>
+      <br>
+      <p><strong>📅 营业：</strong>每天开放，但<strong>周六日最热闹</strong>，摊位最多。</p>
+      <br>
+      <p><strong>🍜 推荐：</strong>尝试市集内的清迈特色小吃，价格实惠，种类丰富。</p>`
+    },
+    'on-the-rock': {
+      title: '🪨 On The Rock @NamPhrae',
+      sub: 'Hang Dong District · 备选景点',
+      body: `<p>清迈南部 Nam Phrae 区域的网红山景餐厅，建在岩石悬崖上，俯瞰山谷美景。</p>
+      <br>
+      <p><strong>🍽️ 特色：</strong>泰式料理+山景，景色绝美，是清迈最具仪式感的用餐体验之一。</p>
+      <br>
+      <p><strong>⚠️ 注意：</strong>座位极其有限，<strong>强烈建议提前 1-2 天预订</strong>，否则可能无位。</p>
+      <br>
+      <p><strong>💡 建议：</strong>如行程有余裕，可在 Day 3 下午顺路（南部方向需单独安排）。</p>`
+    },
+    'horse': {
+      title: '🐴 Pong Horse Park',
+      sub: 'ปงยั้งม้า · Hang Dong · 备选景点',
+      body: `<p>位于清迈南部 Hang Dong 区的骑马体验公园，周边田园风光优美。</p>
+      <br>
+      <p><strong>🐴 体验：</strong>骑马漫步田间，适合亲子家庭或想体验骑马的旅行者。</p>
+      <br>
+      <p><strong>💡 建议：</strong>与 On The Rock、Shooting Range 同在南部方向，可组成南部一日游路线。</p>`
+    }
+  };
+
+  function showPopup(id) {
+    const data = popups[id];
+    if (!data) return;
+    document.getElementById('popupTitle').textContent = data.title;
+    document.getElementById('popupSub').textContent = data.sub;
+    document.getElementById('popupBody').innerHTML = data.body;
+    document.getElementById('popupOverlay').classList.add('show');
+  }
+
+  function closePopup(e) {
+    if (!e || e.target === document.getElementById('popupOverlay') || e.target.classList.contains('popup-close')) {
+      document.getElementById('popupOverlay').classList.remove('show');
+    }
+  }
+</script>
+
+</body>
+</html>
