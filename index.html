@@ -226,6 +226,7 @@
     .stop-tag.food { background: #fce4ec; color: #c62828; }
     .stop-tag.activity { background: #fff8e1; color: #f57f17; }
     .stop-tag.spa { background: #f3e5f5; color: #7b1fa2; }
+    .stop-tag.bar { background: #ede7f6; color: #4527a0; }
 
     .tip-box {
       background: #fff9f0;
@@ -385,6 +386,7 @@
     <span class="tag">🌊 水中古树</span>
     <span class="tag">🌲 自然探索</span>
     <span class="tag">💆 温泉SPA</span>
+    <span class="tag">🍸 Bar Hopping</span>
   </div>
 </div>
 
@@ -404,7 +406,7 @@
     <div class="day-flow-item d1">
       <div class="day-flow-label">Day 1</div>
       <div class="day-flow-title">古城文化</div>
-      <div class="day-flow-stops">6 个景点</div>
+      <div class="day-flow-stops">6 景点 + 🍸 Bar Hopping</div>
     </div>
     <div class="day-flow-item d2">
       <div class="day-flow-label">Day 2</div>
@@ -424,7 +426,7 @@
       <div class="ov-title">行程亮点</div>
       <div class="ov-content">
         <ul>
-          <li><strong>Day 1</strong> — 乌蒙寺 · 兰纳博物馆 · 网红咖啡 · 公园 · SPA · 精彩市集</li>
+          <li><strong>Day 1</strong> — 乌蒙寺 · 兰纳博物馆 · 网红咖啡 · 公园 · SPA · 精彩市集 · 🍸 Bar Hopping</li>
           <li><strong>Day 2</strong> — 大象之家 · 老虎王国 · 丛林滑车 · 清迈蓝庙</li>
           <li><strong>Day 3</strong> — 🌟水中百年雨树 · 蓝庙 · 布亚唐粘性瀑布</li>
         </ul>
@@ -610,6 +612,14 @@
           <text x="230" y="326" font-size="8" fill="#888">Day1 ⑥</text>
         </g>
 
+        <!-- Bar Hopping 尼曼路区 -->
+        <g onclick="showPopup('bar-hopping')" style="cursor:pointer">
+          <circle cx="130" cy="265" r="14" fill="#e76f51" stroke="white" stroke-width="2.5"/>
+          <text x="130" y="269" text-anchor="middle" font-size="11" fill="white" font-weight="700">🍸</text>
+          <text x="75" y="258" font-size="9" fill="#c44a2a" font-weight="700">Bar Hopping</text>
+          <text x="75" y="268" font-size="8" fill="#888">Day1 ⑦</text>
+        </g>
+
         <!-- 南部景点 -->
         <!-- On The Rock -->
         <g onclick="showPopup('on-the-rock')" style="cursor:pointer">
@@ -732,6 +742,18 @@
         <div class="stop-tags">
           <span class="stop-tag food">美食</span>
           <span class="stop-tag activity">购物</span>
+        </div>
+      </div>
+
+      <div class="stop-card d1" onclick="showPopup('bar-hopping')">
+        <div class="stop-time">21:00</div>
+        <div class="stop-name">🍸 Bar Hopping · 清迈夜生活</div>
+        <div class="stop-name-en">Nimmanhaemin / Old City Bars</div>
+        <div class="stop-desc">清迈夜生活精华！推荐三条路线：① 尼曼路酒吧街（Warm Up Café → Spacetime Bar → MAYA 顶楼 Nimman Hill）② 古城爵士酒吧（North Gate Jazz Co-Op）③ Zoe in Yellow 背包客区。从市集 Grab 过去约 10 分钟。</div>
+        <div class="stop-tags">
+          <span class="stop-tag highlight">🍸 Bar Hopping</span>
+          <span class="stop-tag activity">夜生活</span>
+          <span class="stop-tag food">鸡尾酒</span>
         </div>
       </div>
     </div>
@@ -1010,6 +1032,47 @@
       </div>
     </div>
 
+    <div class="tips-card">
+      <div class="tips-card-title">🍸 Bar Hopping · 清迈夜生活攻略</div>
+      <div class="tips-row">
+        <span class="tips-label">📍 路线 A</span>
+        <span class="tips-val"><strong>尼曼路酒吧街（最推荐）</strong><br>
+        ① <strong>Warm Up Café</strong> — 清迈最传奇夜店，三区切换（吧台→Live Band→电音），周五六最嗨<br>
+        ② <strong>Spacetime Bar</strong> — Sci-Fi + Cyberpunk 风格，创意鸡尾酒，拍照超出片<br>
+        ③ <strong>Nimman Hill（MAYA 顶楼）</strong> — 6家高空酒吧群，俯瞰清迈夜景，推荐 MYST<br>
+        ④ <strong>SHELBY BAR</strong>（尼曼7巷）— 1920s英伦风，威士忌+爵士/蓝调</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">📍 路线 B</span>
+        <span class="tips-val"><strong>古城爵士酒吧（文艺范）</strong><br>
+        ① <strong>North Gate Jazz Co-Op</strong> — 清迈No.1爵士酒吧，现场即兴演出，氛围绝佳<br>
+        ② <strong>Nophaburi Bar</strong> — 古城隐藏鸡尾酒吧，泰国本地食材创意调酒<br>
+        ③ <strong>Zoe in Yellow</strong> — 背包客聚集地，多家酒吧串联，西方年轻人最爱</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">📍 路线 C</span>
+        <span class="tips-val"><strong>河边/塔佩路（休闲派）</strong><br>
+        ① <strong>Good View / Riverside Bar</strong> — 河畔老牌餐吧，Live Band + 河景<br>
+        ② <strong>Thapae East</strong> — 塔佩门附近创意艺术空间，不定期有演出</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">💰 消费</span>
+        <span class="tips-val">啤酒约 80-150 泰铢/瓶，鸡尾酒约 200-350 泰铢/杯，MAYA 顶楼稍贵</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">⏰ 时间</span>
+        <span class="tips-val">大部分酒吧 18:00 开门，<strong>21:00 后气氛最好</strong>，凌晨 1-2 点关门</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">🚕 交通</span>
+        <span class="tips-val">酒吧间用 Grab 打车，起步价 30-50 泰铢，尼曼路内步行即可串联</span>
+      </div>
+      <div class="tips-row">
+        <span class="tips-label">⚠️ 注意</span>
+        <span class="tips-val">随身携带护照（偶尔查证件）；注意财物安全；如果第二天要早起看水中雨树，建议适量饮酒</span>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -1189,6 +1252,31 @@
       <p><strong>🐴 体验：</strong>骑马漫步田间，适合亲子家庭或想体验骑马的旅行者。</p>
       <br>
       <p><strong>💡 建议：</strong>与 On The Rock、Shooting Range 同在南部方向，可组成南部一日游路线。</p>`
+    },
+    'bar-hopping': {
+      title: '🍸 Bar Hopping · 清迈夜生活',
+      sub: 'Nimmanhaemin / Old City / Riverside · Day 1 ⑦',
+      body: `<p>清迈的夜生活比你想象的精彩！三大区域各有风格，推荐 bar hopping 路线：</p>
+      <br>
+      <p><strong>🔥 路线 A：尼曼路酒吧街（最推荐）</strong></p>
+      <p>清迈年轻人的聚集地，酒吧密集，步行可串联：</p>
+      <p>• <strong>Warm Up Café</strong> — 清迈最传奇夜店，分三区：吧台社交区、Live Band 区、电音舞池区，周五六人气爆棚</p>
+      <p>• <strong>Spacetime Bar</strong>（尼曼9巷）— Sci-Fi + Cyberpunk 主题，创意鸡尾酒，Google 满分 5.0 评价</p>
+      <p>• <strong>SHELBY BAR</strong>（尼曼7巷）— 1920s 英伦复古风，威士忌 + 经典鸡尾酒 + 蓝调/爵士</p>
+      <p>• <strong>Nimman Hill / MYST</strong>（MAYA 百货顶楼）— 6家高空酒吧，俯瞰清迈夜景，MYST 最热门</p>
+      <p>• <strong>Caravan Bar</strong>（尼曼9巷）— 复古红色装潢，Gin 爱好者天堂，Deep House 配小酌</p>
+      <br>
+      <p><strong>🎵 路线 B：古城爵士酒吧</strong></p>
+      <p>• <strong>North Gate Jazz Co-Op</strong> — 清迈 No.1 爵士酒吧，每晚现场即兴演出，氛围绝了</p>
+      <p>• <strong>Nophaburi Bar</strong> — 古城隐藏鸡尾酒吧，用泰国本地食材调制创意鸡尾酒</p>
+      <p>• <strong>Zoe in Yellow</strong> — 背包客经典聚集地，多家酒吧围成一圈，周末 Live Band</p>
+      <br>
+      <p><strong>🌊 路线 C：河边休闲派</strong></p>
+      <p>• <strong>Good View / Riverside Bar</strong> — 30年老店，河畔 Live Band，吹风听歌</p>
+      <br>
+      <p><strong>💰 消费：</strong>啤酒 80-150 泰铢，鸡尾酒 200-350 泰铢</p>
+      <p><strong>⏰ 最佳时间：</strong>21:00 后气氛最好，大部分凌晨 1-2 点关门</p>
+      <p><strong>⚠️ 注意：</strong>随身带护照，Grab 打车很方便</p>`
     }
   };
 
